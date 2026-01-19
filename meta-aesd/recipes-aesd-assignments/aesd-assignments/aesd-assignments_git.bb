@@ -1,7 +1,7 @@
 # See https://git.yoctoproject.org/poky/tree/meta/files/common-licenses
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
-
+inherit update-rc.d
 # TODO: Set this  with the path to your assignments rep.  Use ssh protocol and see lecture notes
 # about how to setup ssh-agent for passwordless access
 SRC_URI = "git://github.com/cu-ecen-aeld/assignments-3-and-later-sana-all.git;protocol=ssh;branch=main"
@@ -28,7 +28,7 @@ INSANE_SKIP:${PN} += "ldflags"
 # INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"
 # EXTRA_OEMAKE = "CFLAGS='-Wall -Wextra -g' LDFLAGS='${TARGET_LDFLAGS}'"
 
-inherit update-rc.d
+#inherit update-rc.d
 
 INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"
