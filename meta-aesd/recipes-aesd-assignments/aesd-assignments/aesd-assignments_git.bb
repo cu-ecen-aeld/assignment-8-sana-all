@@ -23,7 +23,7 @@ FILES:${PN} += "${bindir}/aesdsocket"
 # TODO: customize these as necessary for any libraries you need for your application
 # (and remove comment)
 TARGET_LDFLAGS += "-pthread -lrt"
-INSANE_SKIP:${PN} += "ldflags"
+#INSANE_SKIP:${PN} += "ldflags"
 # INITSCRIPT_PACKAGES = "${PN}"
 # INITSCRIPT_NAME:${PN} = "aesdsocket-start-stop"
 # EXTRA_OEMAKE = "CFLAGS='-Wall -Wextra -g' LDFLAGS='${TARGET_LDFLAGS}'"
@@ -50,10 +50,10 @@ do_install () {
 	# and
 	# https://docs.yoctoproject.org/ref-manual/variables.html?highlight=workdir#term-S
 	# See example at https://github.com/cu-ecen-aeld/ecen5013-yocto/blob/ecen5013-hello-world/meta-ecen5013/recipes-ecen5013/ecen5013-hello-world/ecen5013-hello-world_git.bb
-    install -d ${D}${bindir}
-    install -m 0755 ${S}/aesdsocket ${D}${bindir}/
 
     # Install the init script
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${S}/aesdsocket-start-stop ${D}${sysconfdir}/init.d
+    install -d ${D}${bindir}
+    install -m 0755 ${S}/aesdsocket ${D}${bindir}/
 }
