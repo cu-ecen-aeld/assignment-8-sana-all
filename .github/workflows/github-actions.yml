@@ -1,131 +1,40 @@
 name: assignment-test
-
 on:
-  push:
-    tags-ignore:
-      - '*'
-    branches:
-      - '*'
-  workflow_dispatch:
-
+    push:
+        tags-ignore:
+            - '*'
+        branches:
+            - '*'
 jobs:
-  full-test:
-    runs-on: ubuntu-latest
-    env:
-      YOCTO_IMG: cuaesd/aesd-autotest:24-assignment6-yocto
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          submodules: 'recursive'
-
-      - name: Disk diagnostics (before cleanup)
-        run: |
-          echo "=== df -h ==="
-          df -h || true
-          echo "=== workspace du (top-level) ==="
-          du -sh . || true
-          echo "=== build folder du (if exists) ==="
-          du -sh build || true
-          du -sh build/* || true
-
-      - name: Prepare /mnt storage for Yocto caches
-        run: |
-          sudo mkdir -p /mnt/yocto-tmp /mnt/sstate-cache /mnt/downloads
-          sudo chmod 777 /mnt/yocto-tmp /mnt/sstate-cache /mnt/downloads
-          echo "Created /mnt directories"
-
-      - name: Restore Yocto caches to /mnt
-        uses: actions/cache@v4
-        with:
-          path: |
-            /mnt/sstate-cache
-            /mnt/downloads
-          key: runner.os-yocto-${{ github.ref }}-${{ hashFiles('**/conf/layer.conf', '**/conf/bblayers.conf') }}
-          restore-keys: |
-            runner.os-yocto-${{ github.ref }}-
-            runner.os-yocto-
-
-      - name: Pre-create build local.conf (safe for Docker)
-        run: |
-          mkdir -p build/conf
-          printf '%s\n' \
-            'TMPDIR ?= "${TOPDIR}/tmp"' \
-            'SSTATE_DIR ?= "${TOPDIR}/sstate-cache"' \
-            'SSTATE_MIRRORS ?= "file://.* file:///mnt/sstate-cache/PATH"' \
-            'DL_DIR ?= "/mnt/downloads"' \
-            'INHERIT += "rm_work"' \
-            'BB_NUMBER_THREADS ?= "2"' \
-            'PARALLEL_MAKE ?= "-j 2"' > build/conf/local.conf
-          echo "local.conf written with SSTATE_MIRRORS"
-
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Debug-inspect image & mounts
-        run: |
-          IMG=${YOCTO_IMG}
-          docker run --rm \
-            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
-            -v /mnt:/mnt \
-            ${IMG} sh -c "
-              whoami &&
-              id pokyuser &&
-              ls -ld /mnt/sstate-cache /mnt/downloads &&
-              echo 'Mirror test OK'
-            "
-        shell: bash
-
-      - name: Run build
-        timeout-minutes: 600
-        run: |
-          docker run --rm \
-            -v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent \
-            -e GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
-            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
-            -v /mnt:/mnt \
-            ${YOCTO_IMG} \
-            --workdir=${GITHUB_WORKSPACE} \
-            ./build.sh
-
-      # ✅ THIS IS THE KEY FIX
-      - name: Configure SSH for non-interactive QEMU access
-        run: |
-          mkdir -p ~/.ssh
-          cat > ~/.ssh/config << 'EOF'
-          Host *
-            StrictHostKeyChecking no
-            UserKnownHostsFile=/dev/null
-            LogLevel ERROR
-          EOF
-          chmod 600 ~/.ssh/config
-
-      - name: Save Yocto caches
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: |
-            /mnt/sstate-cache
-            /mnt/downloads
-          key: runner.os-yocto-${{ github.ref }}-${{ hashFiles('**/conf/layer.conf', '**/conf/bblayers.conf') }}
-
-      - name: Run full test
-        timeout-minutes: 60
-        run: |
-          docker run --rm \
-            -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
-            ${YOCTO_IMG} \
-            --workdir=${GITHUB_WORKSPACE} \
-            ./full-test.sh
-
-      - name: Final cleanup
-        if: always()
-        run: |
-          ssh-add -D || true
-          docker system prune -af --volumes || true
-          df -h || true
-
+      full-test:
+        runs-on: self-hosted
+        steps:
+          - uses: actions/checkout@v3
+            with:
+              clean: false
+              submodules: 'recursive'
+          - uses: webfactory/ssh-agent@v0.5.4
+            with:
+                 ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          - name: Run build
+            timeout-minutes: 600
+            run: |
+               docker run --rm \
+                 -v $SSH_AUTH_SOCK:/ssh-agent -e SSH_AUTH_SOCK=/ssh-agent \
+                 -e GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" \
+                 -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
+                 cuaesd/aesd-autotest:24-assignment6-yocto \
+                 --workdir=${GITHUB_WORKSPACE} \
+                 ./build.sh
+          - name: Cleanup
+            if: always()
+            run: |
+              ssh-add -D
+          - name: Run full test
+            timeout-minutes: 15
+            run: |
+               docker run --rm \
+                 -v ${GITHUB_WORKSPACE}:${GITHUB_WORKSPACE} \
+                 cuaesd/aesd-autotest:assignment6-yocto \
+                 --workdir=${GITHUB_WORKSPACE} \
+                 ./full-test.sh
