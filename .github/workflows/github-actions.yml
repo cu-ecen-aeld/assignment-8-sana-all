@@ -7,7 +7,7 @@ on:
             - '*'
 jobs:
       full-test:
-        runs-on: self-hosted
+        runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v3
             with:
@@ -16,7 +16,6 @@ jobs:
           - uses: webfactory/ssh-agent@v0.5.4
             with:
                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          - name: Build image run: | source poky/oe-init-build-env
           - name: Run build
             timeout-minutes: 600
             run: |
