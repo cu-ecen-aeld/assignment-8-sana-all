@@ -1,4 +1,3 @@
-
 # Recipe created by recipetool
 # This is the basis of a recipe and may need further editing in order to be fully functional.
 # (Feel free to remove these comments when editing.)
@@ -27,7 +26,7 @@ SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
 
 S = "${WORKDIR}/git"
 
-inherit update-rc.d
+inherit module update-rc.d
 
 #EXTRA_OEMAKE:append:task-install = " -C ${STAGING_KERNEL_DIR} M=${S}"
 #EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_DIR}"
