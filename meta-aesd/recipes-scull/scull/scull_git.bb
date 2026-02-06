@@ -13,7 +13,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f098732a73b5f6f3430472f5b094ffdb"
 inherit update-rc.d
 
-SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=https;branch=main \
+SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=ssh;branch=main \
            file://0001-Trim-Makefile-to-only-build-scull-and-misc-modules.patch \
            file://S98scullmodules \
            "
@@ -24,7 +24,10 @@ SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=http
 PV = "1.0+git${SRCPV}"
 SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
 
-S = "${WORKDIR}/git"
+#S = "${WORKDIR}/git" ito pre test 18
+S = "${WORKDIR}/git/server"
+FILES:${PN} += "/lib/modules/extra/*.ko"
+FILES:${PN} += "/etc/init.d/S98scullmodules"
 
 #inherit module update-rc.d
 
@@ -53,5 +56,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/S98scullmodules ${D}${sysconfdir}/init.d/
 }
 
-FILES:${PN} += "/lib/modules/extra/*.ko"
-FILES:${PN} += "/etc/init.d/S98scullmodules"
+#FILES:${PN} += "/lib/modules/extra/*.ko"
+#FILES:${PN} += "/etc/init.d/S98scullmodules"
