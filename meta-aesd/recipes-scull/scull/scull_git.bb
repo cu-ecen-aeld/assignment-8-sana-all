@@ -15,6 +15,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f098732a73b5f6f3430472f5b094ffdb"
 SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=https;branch=main \
            file://0001-Trim-Makefile-to-only-build-scull-and-misc-modules.patch \
            file://S98scullmodules \
+           file://scull-fix-headers.patch \
            "
 
 
@@ -26,7 +27,6 @@ SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
 S = "${WORKDIR}/git"
 
 inherit module update-rc.d
-RDEPENDS:${PN} = ""
 EXTRA_OEMAKE += "M=${S}/scull"
 #EXTRA_OEMAKE:append:task-install = " -C ${STAGING_KERNEL_DIR} M=${S}"
 #EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_DIR}"
@@ -36,6 +36,14 @@ DEPENDS += "virtual/kernel"
 INITSCRIPT_NAME = "S98scullmodules"
 INITSCRIPT_PARAMS = "defaults"
 
+do_compile[depends] += "virtual/kernel:do_shared_workdir"
+
+do_compile() {
+    oe_runmake -C ${S}/scull \
+        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} \
+        KERNELDIR=${STAGING_KERNEL_BUILDDIR} \
+        modules
+}
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_RELEASE}/extra
