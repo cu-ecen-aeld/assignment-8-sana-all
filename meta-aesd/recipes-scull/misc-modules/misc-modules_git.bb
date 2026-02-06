@@ -26,7 +26,8 @@ SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
 
 S = "${WORKDIR}/git"
 
-inherit update-rc.d
+inherit module update-rc.d
+RDEPENDS:${PN} = ""
 EXTRA_OEMAKE += "M=${S}/misc-modules"
 #EXTRA_OEMAKE:append:task-install = " -C ${STAGING_KERNEL_DIR} M=${S}"
 #EXTRA_OEMAKE += "KERNELDIR=${STAGING_KERNEL_DIR}"
@@ -36,14 +37,6 @@ DEPENDS += "virtual/kernel"
 INITSCRIPT_NAME = "S98miscmodules"
 INITSCRIPT_PARAMS = "defaults"
 
-do_compile[depends] += "virtual/kernel:do_shared_workdir"
-
-do_compile() {
-    oe_runmake -C ${S}/misc-modules \
-        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} \
-        KERNELDIR=${STAGING_KERNEL_BUILDDIR} \
-        modules
-}
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_RELEASE}/extra
