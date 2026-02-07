@@ -22,7 +22,7 @@ SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=ssh;
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "a2387c63c858954c4aac3c8e335f1e61b67eed94"
+SRCREV = "77d8e329d884bf13966d693dd834c00f146962b0"
 
 #S = "${WORKDIR}/git" ito pre test 18
 S = "${WORKDIR}/git"
