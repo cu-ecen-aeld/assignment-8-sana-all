@@ -22,10 +22,10 @@ SRC_URI = "git://github.com/cu-ecen-aeld/assignment-7-sana-all.git;protocol=ssh;
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
+SRCREV = "a2387c63c858954c4aac3c8e335f1e61b67eed94"
 
 #S = "${WORKDIR}/git" ito pre test 18
-S = "${WORKDIR}/git/server"
+S = "${WORKDIR}/git"
 FILES:${PN} += "/lib/modules/extra/*.ko"
 FILES:${PN} += "/etc/init.d/S98miscmodules"
 
@@ -41,6 +41,7 @@ INITSCRIPT_PARAMS = "defaults"
 
 do_compile[depends] += "virtual/kernel:do_shared_workdir"
 
+EXTRA_OEMAKE += "obj-m=hello.o"
 do_compile() {
     oe_runmake -C ${S}/misc-modules \
         KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} \

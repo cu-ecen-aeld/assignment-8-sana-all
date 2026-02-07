@@ -1,9 +1,10 @@
---- a/scull/main.c
-+++ b/scull/main.c
-@@ -10,7 +10,6 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/fs.h>
--#include <asm/compiler.h>
- #include <linux/compiler_types.h>
+diff --git a/misc-modules/silly.c b/misc-modules/silly.c
+index 1234567..89abcde 100644
+--- a/misc-modules/silly.c
++++ b/misc-modules/silly.c
+@@ -10,7 +10,7 @@
+-#include <asm/io.h>
+-#include <asm/uaccess.h>
++#include <linux/io.h>
++#include <linux/uaccess.h>
 
