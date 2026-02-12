@@ -38,5 +38,5 @@ else
 fi
 
 set -e
-bitbake -c cleansstate scull misc-modules 
+
 bitbake core-image-aesd

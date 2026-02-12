@@ -1,0 +1,35 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          S98miscmodules
+# Required-Start:    $local_fs
+# Default-Start:     2 3 4 5
+# Short-Description: Load misc kernel modules (hello + faulty)
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "S98miscmodules script ran at $(date)" >> /var/log/miscmodules.log
+    # Load faulty
+    insmod /lib/modules/$(uname -r)/extra/faulty.ko >> /var/log/miscmodules.log 2>&1
+    # Load hello
+    insmod /lib/modules/$(uname -r)/extra/hello.ko >> /var/log/miscmodules.log 2>&1
+    ;;
+  stop)
+    echo "Unloading misc modules..."
+    rmmod hello
+    rmmod faulty
+    ;;
+  restart)
+    rmmod hello
+    rmmod faulty
+    insmod /lib/modules/$(uname -r)/extra/faulty.ko
+    insmod /lib/modules/$(uname -r)/extra/hello.ko
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
