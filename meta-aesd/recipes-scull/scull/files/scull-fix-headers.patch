@@ -1,9 +1,0 @@
---- a/scull/main.c
-+++ b/scull/main.c
-@@ -10,7 +10,6 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/fs.h>
--#include <asm/compiler.h>
- #include <linux/compiler_types.h>
-

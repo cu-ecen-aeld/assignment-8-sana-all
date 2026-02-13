@@ -10,7 +10,8 @@
 #   LICENSE
 SUMMARY = "Misc kernel modules"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=f098732a73b5f6f3430472f5b094ffdb"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
+
 
 inherit module update-rc.d
 #inherit update-rc.d
@@ -29,17 +30,16 @@ SRCREV = "4c641ed43405a0bae97b9d8eebad15595e590cb0"
 
 S = "${WORKDIR}/git/misc-modules"
 
-
+EXTRA_OEMAKE = "KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} M=${S}"
 
 do_compile() {
-    oe_runmake -C ${S}/misc-modules \
-        KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} \
-        modules
+    oe_runmake -C ${STAGING_KERNEL_BUILDDIR} M=${S} modules
 }
+
 
 do_install() {
     install -d ${D}/lib/modules/${KERNEL_VERSION}/extra
-    install -m 0644 ${S}/misc-modules/*.ko ${D}/lib/modules/${KERNEL_VERSION}/extra || true
+    install -m 0644 ${S}/*.ko ${D}/lib/modules/${KERNEL_VERSION}/extra || true
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/S98miscmodules ${D}${sysconfdir}/init.d/
     
