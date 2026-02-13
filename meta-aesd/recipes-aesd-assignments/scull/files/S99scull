@@ -1,0 +1,29 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          S99scull
+# Required-Start:    $local_fs
+# Default-Start:     2 3 4 5
+# Short-Description: Load scull kernel module
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "S99scull script ran at $(date)" >> /var/log/scull.log
+    insmod /lib/modules/$(uname -r)/extra/scull.ko >> /var/log/scull.log 2>&1
+    ;;
+  stop)
+    echo "Unloading scull module..." >> /var/log/scull.log
+    rmmod scull
+    ;;
+  restart)
+    rmmod scull
+    insmod /lib/modules/$(uname -r)/extra/scull.ko >> /var/log/scull.log 2>&1
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
