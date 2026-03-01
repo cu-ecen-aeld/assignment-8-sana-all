@@ -19,7 +19,7 @@ INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME:${PN} = "S97aesdchar"
 INITSCRIPT_PARAMS:${PN} = "defaults 20"
 
-SRC_URI = "git://github.com/cu-ecen-aeld/assignments-3-and-later-sana-all.git;protocol=https;branch=main" \
+SRC_URI = "git://github.com/cu-ecen-aeld/assignments-3-and-later-sana-all.git;protocol=https;branch=main \
            file://S97aesdchar"
 
 
