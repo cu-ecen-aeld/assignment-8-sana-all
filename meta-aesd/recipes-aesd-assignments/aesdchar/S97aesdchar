@@ -1,0 +1,29 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          S97aesdchar
+# Required-Start:    $local_fs
+# Default-Start:     2 3 4 5
+# Short-Description: Load aesdchar kernel module
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "S97aesdchar script ran at $(date)" >> /var/log/aesdchar.log
+    insmod /lib/modules/$(uname -r)/extra/aesdchar.ko >> /var/log/aesdchar.log 2>&1
+    ;;
+  stop)
+    echo "Unloading aesdchar module..." >> /var/log/aesdchar.log
+    rmmod aesdchar
+    ;;
+  restart)
+    rmmod aesdchar
+    insmod /lib/modules/$(uname -r)/extra/aesdchar.ko >> /var/log/aesdchar.log 2>&1
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
