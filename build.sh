@@ -40,4 +40,6 @@ fi
 set -e
 bitbake -c clean cmake-native itstool-native
 bitbake cmake-native itstool-native
+bitbake -c clean gcc-cross-aarch64
+bitbake gcc-cross-aarch64
 bitbake core-image-aesd
