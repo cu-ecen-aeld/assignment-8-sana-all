@@ -28,7 +28,7 @@ PV = "1.0+git${SRCPV}"
 SRCREV = "d27eb764a31fe19ce88bc9096b6465d0f59b5be3"
 
 
-S = "${WORKDIR}/git/server"
+S = "${WORKDIR}/git/aesd-char-driver"
 
 EXTRA_OEMAKE = "KERNEL_SRC=${STAGING_KERNEL_BUILDDIR} M=${S}"
 
