@@ -38,5 +38,6 @@ else
 fi
 
 set -e
-
+bitbake -c clean cmake-native itstool-native
+bitbake cmake-native itstool-native
 bitbake core-image-aesd
