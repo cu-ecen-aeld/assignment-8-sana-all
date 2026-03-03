@@ -38,7 +38,5 @@ else
 fi
 
 set -e
-bitbake -c clean libxcb-native
-bitbake libxcb-native
 
 bitbake core-image-aesd
