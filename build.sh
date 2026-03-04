@@ -38,5 +38,6 @@ else
 fi
 
 set -e
-
+bitbake -c cleansstate aesdchar aesd-assignments
+bitbake aesdchar aesd-assignments
 bitbake core-image-aesd
