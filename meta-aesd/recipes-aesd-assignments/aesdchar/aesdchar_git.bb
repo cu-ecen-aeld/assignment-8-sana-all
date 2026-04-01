@@ -25,7 +25,7 @@ SRC_URI = "git://github.com/cu-ecen-aeld/assignments-3-and-later-sana-all.git;pr
 
 # Modify these as desired
 PV = "1.0+git${SRCPV}"
-SRCREV = "d3ec3bc95846c1fd41cbc99678fe76b01889643b"
+SRCREV = "174a683e4e1ca0acd20ef165a48bcb1514374416"
 
 
 S = "${WORKDIR}/git/aesd-char-driver"
